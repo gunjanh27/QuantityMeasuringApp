@@ -1,21 +1,24 @@
 public enum LengthUnit {
+    KILOGRAM(1.0),
+    GRAM(0.001),
+    POUND(0.453592);
 
-    FEET(1.0),
-    INCHES(1.0 / 12.0),
-    YARDS(3.0),
-    CENTIMETER(0.393701 / 12.0);
+    private final double conversionFactor;
 
-    private final double toFeetFactor;
-
-    LengthUnit(double toFeetFactor) {
-        this.toFeetFactor = toFeetFactor;
+    WeightUnit(double conversionFactor) {
+        this.conversionFactor = conversionFactor;
     }
 
-    public double toFeet(double value) {
-        return value * toFeetFactor;
+    public double getConversionFactor() {
+        return conversionFactor;
     }
 
-    public double fromFeet(double feetValue) {
-        return feetValue / toFeetFactor;
+    public double convertToBaseUnit(double value) {
+        return value * this.conversionFactor;
+    }
+
+    public double convertFromBaseUnit(double baseValue) {
+        return baseValue / this.conversionFactor;
+
     }
 }

@@ -1,75 +1,28 @@
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+public class QMA {
+    public static void main(String[] args) {
+        System.out.println("--- Equality Comparisons ---");
+        System.out.println("Input: Quantity(1.0, KILOGRAM).equals(Quantity(1.0, KILOGRAM)) -> Output: " +
+                new QuantityWeight(1.0, WeightUnit.KILOGRAM).equals(new QuantityWeight(1.0, WeightUnit.KILOGRAM)));
+        System.out.println("Input: Quantity(1.0, KILOGRAM).equals(Quantity(1000.0, GRAM)) -> Output: " +
+                new QuantityWeight(1.0, WeightUnit.KILOGRAM).equals(new QuantityWeight(1000.0, WeightUnit.GRAM)));
+        System.out.println("Input: Quantity(1.0, KILOGRAM).equals(Quantity(~2.20462, POUND)) -> Output: " +
+                new QuantityWeight(1.0, WeightUnit.KILOGRAM).equals(new QuantityWeight(2.20462, WeightUnit.POUND)));
 
-class Qma {
+        System.out.println("\n--- Unit Conversions ---");
+        System.out.println("Input: Quantity(1.0, KILOGRAM).convertTo(GRAM) -> Output: " +
+                new QuantityWeight(1.0, WeightUnit.KILOGRAM).convertTo(WeightUnit.GRAM));
+        System.out.println("Input: Quantity(2.0, POUND).convertTo(KILOGRAM) -> Output: " +
+                new QuantityWeight(2.0, WeightUnit.POUND).convertTo(WeightUnit.KILOGRAM));
 
-    private static final double EPS = 1e-6;
+        System.out.println("\n--- Addition Operations (Implicit Target Unit) ---");
+        System.out.println("Input: Quantity(1.0, KILOGRAM).add(Quantity(1000.0, GRAM)) -> Output: " +
+                new QuantityWeight(1.0, WeightUnit.KILOGRAM).add(new QuantityWeight(1000.0, WeightUnit.GRAM)));
 
-    @Test
-    void testConversion_FeetToInches() {
-        assertEquals(12.0,
-                QuantityLength.convert(1.0, LengthUnit.FEET, LengthUnit.INCHES),
-                EPS);
+        System.out.println("\n--- Addition Operations (Explicit Target Unit) ---");
+        System.out.println("Input: Quantity(1.0, KILOGRAM).add(Quantity(1000.0, GRAM), GRAM) -> Output: " +
+                new QuantityWeight(1.0, WeightUnit.KILOGRAM).add(new QuantityWeight(1000.0, WeightUnit.GRAM), WeightUnit.GRAM));
+
+        System.out.println("\n--- Category Incompatibility ---");
+        System.out.println("Input: Quantity(1.0, KILOGRAM).equals(Quantity(1.0, FOOT)) -> Output: " +
+                new QuantityWeight(1.0, WeightUnit.KILOGRAM).equals(new Object()));
     }
-
-    @Test
-    void testConversion_InchesToFeet() {
-        assertEquals(2.0,
-                QuantityLength.convert(24.0, LengthUnit.INCHES, LengthUnit.FEET),
-                EPS);
-    }
-
-    @Test
-    void testConversion_YardsToInches() {
-        assertEquals(36.0,
-                QuantityLength.convert(1.0, LengthUnit.YARDS, LengthUnit.INCHES),
-                EPS);
-    }
-
-    @Test
-    void testConversion_CentimeterToInch() {
-        assertEquals(1.0,
-                QuantityLength.convert(2.54, LengthUnit.CENTIMETER, LengthUnit.INCHES),
-                1e-3); // tolerance
-    }
-
-    @Test
-    void testConversion_RoundTrip() {
-        double value = 5.0;
-        double result = QuantityLength.convert(
-                QuantityLength.convert(value, LengthUnit.FEET, LengthUnit.INCHES),
-                LengthUnit.INCH,
-                LengthUnit.FEET
-        );
-
-        assertEquals(value, result, EPS);
-    }
-
-    @Test
-    void testConversion_Zero() {
-        assertEquals(0.0,
-                QuantityLength.convert(0.0, LengthUnit.FEET, LengthUnit.INCHES),
-                EPS);
-    }
-
-    @Test
-    void testConversion_Negative() {
-        assertEquals(-12.0,
-                QuantityLength.convert(-1.0, LengthUnit.FEET, LengthUnit.INCHES),
-                EPS);
-    }
-
-    @Test
-    void testConversion_InvalidUnit() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            QuantityLength.convert(1.0, null, LengthUnit.FEET);
-        });
-    }
-
-    @Test
-    void testConversion_InvalidValue() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            QuantityLength.convert(Double.NaN, LengthUnit.FEET, LengthUnit.INCHES);
-        });
-    }
-}
