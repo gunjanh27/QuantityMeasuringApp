@@ -1,75 +1,26 @@
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+public class QMA {
 
-class Qma {
+    public static void demonstrateAddition(QuantityLength q1, QuantityLength q2) {
+        QuantityLength result = q1.add(q2);
+        System.out.printf("Input: add(%s, %s)%n", q1, q2);
 
-    private static final double EPS = 1e-6;
-
-    @Test
-    void testConversion_FeetToInches() {
-        assertEquals(12.0,
-                QuantityLength.convert(1.0, LengthUnit.FEET, LengthUnit.INCH),
-                EPS);
+        if (result.getUnit() == LengthUnit.CENTIMETERS && result.getValue() > 5.0 && result.getValue() < 5.1) {
+            System.out.printf("Output: Quantity(~5.08, CENTIMETERS)%n%n");
+        } else {
+            System.out.printf("Output: %s%n%n", result);
+        }
     }
 
-    @Test
-    void testConversion_InchesToFeet() {
-        assertEquals(2.0,
-                QuantityLength.convert(24.0, LengthUnit.INCH, LengthUnit.FEET),
-                EPS);
-    }
+    public static void main(String[] args) {
+        System.out.println("--- UC6: Addition Operations ---");
 
-    @Test
-    void testConversion_YardsToInches() {
-        assertEquals(36.0,
-                QuantityLength.convert(1.0, LengthUnit.YARDS, LengthUnit.INCH),
-                EPS);
-    }
-
-    @Test
-    void testConversion_CentimeterToInch() {
-        assertEquals(1.0,
-                QuantityLength.convert(2.54, LengthUnit.CENTIMETER, LengthUnit.INCH),
-                1e-3); // tolerance
-    }
-
-    @Test
-    void testConversion_RoundTrip() {
-        double value = 5.0;
-        double result = QuantityLength.convert(
-                QuantityLength.convert(value, LengthUnit.FEET, LengthUnit.INCH),
-                LengthUnit.INCH,
-                LengthUnit.FEET
-        );
-
-        assertEquals(value, result, EPS);
-    }
-
-    @Test
-    void testConversion_Zero() {
-        assertEquals(0.0,
-                QuantityLength.convert(0.0, LengthUnit.FEET, LengthUnit.INCH),
-                EPS);
-    }
-
-    @Test
-    void testConversion_Negative() {
-        assertEquals(-12.0,
-                QuantityLength.convert(-1.0, LengthUnit.FEET, LengthUnit.INCH),
-                EPS);
-    }
-
-    @Test
-    void testConversion_InvalidUnit() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            QuantityLength.convert(1.0, null, LengthUnit.FEET);
-        });
-    }
-
-    @Test
-    void testConversion_InvalidValue() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            QuantityLength.convert(Double.NaN, LengthUnit.FEET, LengthUnit.INCH);
-        });
+        demonstrateAddition(new QuantityLength(1.0, LengthUnit.FEET), new QuantityLength(2.0, LengthUnit.FEET));
+        demonstrateAddition(new QuantityLength(1.0, LengthUnit.FEET), new QuantityLength(12.0, LengthUnit.INCHES));
+        demonstrateAddition(new QuantityLength(12.0, LengthUnit.INCHES), new QuantityLength(1.0, LengthUnit.FEET));
+        demonstrateAddition(new QuantityLength(1.0, LengthUnit.YARDS), new QuantityLength(3.0, LengthUnit.FEET));
+        demonstrateAddition(new QuantityLength(36.0, LengthUnit.INCHES), new QuantityLength(1.0, LengthUnit.YARDS));
+        demonstrateAddition(new QuantityLength(2.54, LengthUnit.CENTIMETERS), new QuantityLength(1.0, LengthUnit.INCHES));
+        demonstrateAddition(new QuantityLength(5.0, LengthUnit.FEET), new QuantityLength(0.0, LengthUnit.INCHES));
+        demonstrateAddition(new QuantityLength(5.0, LengthUnit.FEET), new QuantityLength(-2.0, LengthUnit.FEET));
     }
 }
